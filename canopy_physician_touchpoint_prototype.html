@@ -1,0 +1,1136 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F0EDE8;
+    --surface: #FFFFFF;
+    --surface2: #F7F5F2;
+    --canopy: #1B4D3E;
+    --canopy-light: #2D6B55;
+    --canopy-pale: #E8F0ED;
+    --accent: #E8622A;
+    --accent-pale: #FDF0EB;
+    --text: #1A1A18;
+    --text-2: #5C5C58;
+    --text-3: #9C9C96;
+    --border: rgba(26,26,24,0.1);
+    --shadow: 0 2px 20px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.12);
+    --r: 20px;
+    --r-sm: 12px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .prototype-wrap {
+    width: 100%;
+    max-width: 900px;
+  }
+
+  .proto-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .proto-header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--canopy);
+    margin-bottom: 6px;
+  }
+
+  .proto-header p {
+    font-size: 14px;
+    color: var(--text-2);
+    font-weight: 400;
+  }
+
+  .flow-steps {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .flow-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .flow-step.active {
+    background: var(--canopy);
+    color: white;
+    border-color: var(--canopy);
+  }
+
+  .flow-step .step-num {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .flow-step:not(.active) .step-num {
+    background: var(--canopy-pale);
+    color: var(--canopy);
+  }
+
+  .flow-arrow {
+    color: var(--text-3);
+    font-size: 16px;
+  }
+
+  .screens-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .screen-card {
+    background: var(--surface);
+    border-radius: var(--r);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    display: none;
+  }
+
+  .screen-card.visible {
+    display: block;
+    animation: fadeUp 0.3s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .screen-label {
+    padding: 14px 20px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .screen-label .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  /* ── PHONE MOCKUP ── */
+  .phone-wrap {
+    padding: 24px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .phone {
+    width: 240px;
+    background: #1A1A18;
+    border-radius: 36px;
+    padding: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    position: relative;
+  }
+
+  .phone-notch {
+    width: 80px;
+    height: 24px;
+    background: #1A1A18;
+    border-radius: 0 0 16px 16px;
+    margin: 0 auto 8px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .phone-screen {
+    background: #F0EDE8;
+    border-radius: 28px;
+    overflow: hidden;
+    min-height: 420px;
+  }
+
+  .phone-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px 4px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* Push notification */
+  .push-notification {
+    margin: 8px;
+    background: rgba(255,255,255,0.95);
+    border-radius: 16px;
+    padding: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    animation: slideDown 0.4s ease 0.3s both;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .push-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .push-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: var(--canopy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  .push-app {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-2);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .push-time {
+    font-size: 10px;
+    color: var(--text-3);
+    margin-left: auto;
+  }
+
+  .push-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  .push-body {
+    font-size: 11px;
+    color: var(--text-2);
+    line-height: 1.4;
+  }
+
+  .push-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .push-btn {
+    flex: 1;
+    padding: 7px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .push-btn.primary {
+    background: var(--canopy);
+    color: white;
+  }
+
+  .push-btn.secondary {
+    background: var(--surface2);
+    color: var(--text-2);
+  }
+
+  .phone-home {
+    padding: 12px;
+  }
+
+  .phone-greeting {
+    font-family: 'DM Serif Display', serif;
+    font-size: 16px;
+    color: var(--canopy);
+    margin-bottom: 4px;
+  }
+
+  .phone-sub {
+    font-size: 10px;
+    color: var(--text-2);
+    margin-bottom: 12px;
+  }
+
+  .care-card {
+    background: var(--canopy);
+    border-radius: 14px;
+    padding: 14px;
+    color: white;
+    margin-bottom: 10px;
+    animation: fadeUp 0.4s ease 0.5s both;
+  }
+
+  .care-card-label {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.7;
+    margin-bottom: 4px;
+  }
+
+  .care-card-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .care-card-q {
+    font-size: 11px;
+    opacity: 0.85;
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+
+  .care-card-btn {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+  }
+
+  .quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .quick-action {
+    background: white;
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .quick-action-icon {
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+
+  .quick-action-label {
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--text-2);
+  }
+
+  /* ── EMAIL MOCKUP ── */
+  .email-wrap {
+    padding: 20px;
+  }
+
+  .email-client {
+    background: #F7F5F2;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .email-toolbar {
+    background: #E8E5E0;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .email-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .email-body {
+    padding: 20px 16px;
+    background: white;
+  }
+
+  .email-from {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .email-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--canopy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .email-from-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .email-from-addr {
+    font-size: 11px;
+    color: var(--text-3);
+  }
+
+  .email-date {
+    font-size: 11px;
+    color: var(--text-3);
+    margin-left: auto;
+  }
+
+  .email-subject {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: var(--canopy);
+    margin-bottom: 14px;
+    line-height: 1.3;
+  }
+
+  .email-hi {
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+
+  .email-p {
+    font-size: 12px;
+    color: var(--text-2);
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  .email-checkin {
+    background: var(--canopy-pale);
+    border-left: 3px solid var(--canopy);
+    border-radius: 0 10px 10px 0;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+  }
+
+  .email-checkin-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--canopy);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .email-question {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: var(--text);
+  }
+
+  .email-question::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--canopy);
+    flex-shrink: 0;
+  }
+
+  .email-cta {
+    background: var(--canopy);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 12px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .email-footer {
+    font-size: 10px;
+    color: var(--text-3);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* ── CHAT MOCKUP ── */
+  .chat-wrap {
+    padding: 0;
+  }
+
+  .chat-header {
+    background: var(--canopy);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .chat-back {
+    color: rgba(255,255,255,0.7);
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .chat-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .chat-info {}
+
+  .chat-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+  }
+
+  .chat-status {
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .chat-status::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #4ade80;
+  }
+
+  .chat-messages {
+    padding: 16px;
+    background: var(--bg);
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .chat-date-divider {
+    text-align: center;
+    font-size: 10px;
+    color: var(--text-3);
+    font-weight: 500;
+  }
+
+  .msg {
+    max-width: 80%;
+    animation: fadeUp 0.3s ease both;
+  }
+
+  .msg.received { align-self: flex-start; }
+  .msg.sent { align-self: flex-end; }
+
+  .msg-bubble {
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .msg.received .msg-bubble {
+    background: white;
+    color: var(--text);
+    border-bottom-left-radius: 4px;
+  }
+
+  .msg.sent .msg-bubble {
+    background: var(--canopy);
+    color: white;
+    border-bottom-right-radius: 4px;
+  }
+
+  .msg-time {
+    font-size: 10px;
+    color: var(--text-3);
+    margin-top: 3px;
+    padding: 0 4px;
+  }
+
+  .msg.sent .msg-time { text-align: right; }
+
+  .msg-suggested {
+    background: var(--accent-pale);
+    border: 1px solid rgba(232,98,42,0.2);
+    border-radius: 12px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+
+  .msg-suggested:hover {
+    background: rgba(232,98,42,0.15);
+  }
+
+  .suggested-label {
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+    padding: 0 4px;
+  }
+
+  .chat-input-area {
+    padding: 12px 16px;
+    background: white;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .chat-input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    outline: none;
+  }
+
+  .chat-send {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--canopy);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* ── TRIGGER LOGIC ── */
+  .trigger-wrap {
+    padding: 20px;
+  }
+
+  .trigger-timeline {
+    position: relative;
+    padding-left: 28px;
+  }
+
+  .trigger-timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--canopy), var(--accent));
+    border-radius: 2px;
+  }
+
+  .trigger-item {
+    position: relative;
+    margin-bottom: 20px;
+    animation: fadeUp 0.3s ease both;
+  }
+
+  .trigger-item:nth-child(1) { animation-delay: 0.1s; }
+  .trigger-item:nth-child(2) { animation-delay: 0.2s; }
+  .trigger-item:nth-child(3) { animation-delay: 0.3s; }
+  .trigger-item:nth-child(4) { animation-delay: 0.4s; }
+
+  .trigger-dot {
+    position: absolute;
+    left: -22px;
+    top: 4px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px var(--canopy);
+    background: var(--canopy);
+  }
+
+  .trigger-dot.accent {
+    box-shadow: 0 0 0 2px var(--accent);
+    background: var(--accent);
+  }
+
+  .trigger-day {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+
+  .trigger-card {
+    background: white;
+    border-radius: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+  }
+
+  .trigger-card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .trigger-badge {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .trigger-badge.push { background: #FEF3C7; color: #92400E; }
+  .trigger-badge.email { background: #DBEAFE; color: #1E40AF; }
+  .trigger-badge.both { background: var(--canopy-pale); color: var(--canopy); }
+
+  .trigger-card-desc {
+    font-size: 11px;
+    color: var(--text-2);
+    line-height: 1.5;
+  }
+
+  .trigger-condition {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 11px;
+    color: var(--text-2);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .trigger-condition strong {
+    color: var(--canopy);
+    font-weight: 600;
+  }
+
+  /* Nav tabs */
+  .nav-tabs {
+    display: flex;
+    background: var(--surface2);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 20px;
+    gap: 4px;
+  }
+
+  .nav-tab {
+    flex: 1;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-2);
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .nav-tab.active {
+    background: white;
+    color: var(--canopy);
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeUp 0.2s ease; }
+
+  .full-width { grid-column: 1 / -1; }
+
+  .scenario-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent-pale);
+    border: 1px solid rgba(232,98,42,0.2);
+    border-radius: 100px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="prototype-wrap">
+
+  <div class="proto-header">
+    <h1>Canopy Health — Physician Touchpoint Feature</h1>
+    <p>Prototype: Post-care follow-up to increase physician engagement and 30-day retention</p>
+  </div>
+
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('trigger')">Trigger Logic</button>
+    <button class="nav-tab" onclick="switchTab('push')">Push Notification</button>
+    <button class="nav-tab" onclick="switchTab('email')">Email Follow-up</button>
+    <button class="nav-tab" onclick="switchTab('chat')">Message Physician</button>
+  </div>
+
+  <!-- TRIGGER TAB -->
+  <div class="tab-content active" id="tab-trigger">
+    <div class="screens-grid">
+      <div class="screen-card visible full-width">
+        <div class="screen-label"><span class="dot"></span>Automated Follow-up Trigger Flow</div>
+        <div class="trigger-wrap">
+          <div class="trigger-condition">
+            <span>⚡</span>
+            <span><strong>Trigger:</strong> Member completes a care visit or prescription is filled → follow-up sequence begins</span>
+          </div>
+          <div class="trigger-timeline">
+            <div class="trigger-item">
+              <div class="trigger-dot"></div>
+              <div class="trigger-day">Event Day — Care visit or Rx filled</div>
+              <div class="trigger-card">
+                <div class="trigger-card-title">
+                  Care episode completed
+                  <span class="trigger-badge both">System trigger</span>
+                </div>
+                <div class="trigger-card-desc">Member fills prescription or completes a care request. System logs completion timestamp and schedules follow-up sequence.</div>
+              </div>
+            </div>
+            <div class="trigger-item">
+              <div class="trigger-dot"></div>
+              <div class="trigger-day">Day 3 — First follow-up</div>
+              <div class="trigger-card">
+                <div class="trigger-card-title">
+                  Push notification sent
+                  <span class="trigger-badge push">Push</span>
+                </div>
+                <div class="trigger-card-desc">"How are you feeling since your last visit? Tap to check in with Dr. [Name]." Member tapped directly into physician message thread.</div>
+              </div>
+            </div>
+            <div class="trigger-item">
+              <div class="trigger-dot"></div>
+              <div class="trigger-day">Day 5 — If no response</div>
+              <div class="trigger-card">
+                <div class="trigger-card-title">
+                  Email follow-up sent
+                  <span class="trigger-badge email">Email</span>
+                </div>
+                <div class="trigger-card-desc">Personalized email with specific check-in questions based on their care visit type. One-tap CTA to open message thread.</div>
+              </div>
+            </div>
+            <div class="trigger-item">
+              <div class="trigger-dot accent"></div>
+              <div class="trigger-day">Day 7 — Physician-initiated</div>
+              <div class="trigger-card">
+                <div class="trigger-card-title">
+                  Physician sends check-in message
+                  <span class="trigger-badge both">Both</span>
+                </div>
+                <div class="trigger-card-desc">If member still hasn't responded, physician receives a prompt to send a personal check-in message. Most effective touchpoint — member sees their actual doctor reaching out.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PUSH TAB -->
+  <div class="tab-content" id="tab-push">
+    <div class="screens-grid">
+      <div class="screen-card visible">
+        <div class="screen-label"><span class="dot"></span>Lock Screen — Day 3 Push Notification</div>
+        <div class="phone-wrap">
+          <div class="phone">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="phone-status">
+                <span>9:41</span>
+                <span>⚡ 87%</span>
+              </div>
+              <div style="padding: 4px 8px 8px;">
+                <div class="push-notification">
+                  <div class="push-header">
+                    <div class="push-icon">🌿</div>
+                    <div>
+                      <div class="push-app">Canopy Health</div>
+                    </div>
+                    <div class="push-time">now</div>
+                  </div>
+                  <div class="push-title">Check in with Dr. Martinez 👋</div>
+                  <div class="push-body">It's been 3 days since your last visit. How are you feeling? Any new or worsening symptoms?</div>
+                  <div class="push-actions">
+                    <div class="push-btn primary">Message Dr. Martinez</div>
+                    <div class="push-btn secondary">Later</div>
+                  </div>
+                </div>
+              </div>
+              <div style="padding: 4px 12px; opacity: 0.3; text-align: center; font-size: 10px; color: #666; margin-top: 8px;">
+                Swipe up to unlock
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen-card visible">
+        <div class="screen-label"><span class="dot"></span>In-App — Home Screen Prompt</div>
+        <div class="phone-wrap">
+          <div class="phone">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="phone-status">
+                <span>9:41</span>
+                <span>⚡ 87%</span>
+              </div>
+              <div class="phone-home">
+                <div class="phone-greeting">Hi, Jordan 👋</div>
+                <div class="phone-sub">Your care team is here for you</div>
+                <div class="care-card">
+                  <div class="care-card-label">Follow-up needed</div>
+                  <div class="care-card-title">How are you feeling?</div>
+                  <div class="care-card-q">It's been 3 days since Dr. Martinez filled your prescription. Let her know how you're doing.</div>
+                  <div class="care-card-btn" onclick="switchTab('chat')">Message Dr. Martinez →</div>
+                </div>
+                <div class="quick-actions">
+                  <div class="quick-action">
+                    <div class="quick-action-icon">📋</div>
+                    <div class="quick-action-label">Care Request</div>
+                  </div>
+                  <div class="quick-action">
+                    <div class="quick-action-icon">💊</div>
+                    <div class="quick-action-label">Prescriptions</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMAIL TAB -->
+  <div class="tab-content" id="tab-email">
+    <div class="screens-grid">
+      <div class="screen-card visible full-width">
+        <div class="screen-label"><span class="dot"></span>Email Follow-up — Day 5 (No Push Response)</div>
+        <div class="email-wrap">
+          <div class="email-client">
+            <div class="email-toolbar">
+              <div class="email-dot" style="background:#FF5F57"></div>
+              <div class="email-dot" style="background:#FEBC2E"></div>
+              <div class="email-dot" style="background:#28C840"></div>
+            </div>
+            <div class="email-body">
+              <div class="email-from">
+                <div class="email-avatar">🌿</div>
+                <div>
+                  <div class="email-from-name">Canopy Health Care Team</div>
+                  <div class="email-from-addr">care@canopyhealth.com</div>
+                </div>
+                <div class="email-date">Today, 9:41 AM</div>
+              </div>
+              <div class="email-subject">Checking in — how are you feeling, Jordan?</div>
+              <div class="email-hi">Hi Jordan,</div>
+              <div class="email-p">It's been 5 days since Dr. Martinez filled your prescription. We want to make sure everything is going well and that you're feeling better.</div>
+              <div class="email-checkin">
+                <div class="email-checkin-label">Quick check-in questions</div>
+                <div class="email-question">How are you feeling compared to before your visit?</div>
+                <div class="email-question">Any new or worsening symptoms since your prescription?</div>
+                <div class="email-question">Are you experiencing any side effects from your medication?</div>
+              </div>
+              <button class="email-cta" onclick="switchTab('chat')">Reply to Dr. Martinez in Canopy →</button>
+              <div class="email-footer">
+                Canopy Health · Your chronic care platform<br>
+                You're receiving this because you're a Canopy member.<br>
+                <span style="text-decoration: underline; cursor: pointer;">Manage notifications</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAT TAB -->
+  <div class="tab-content" id="tab-chat">
+    <div class="screens-grid">
+      <div class="screen-card visible full-width">
+        <div class="screen-label"><span class="dot"></span>In-App Physician Message Thread</div>
+        <div class="chat-wrap">
+          <div class="chat-header">
+            <div class="chat-back">‹</div>
+            <div class="chat-avatar">👩‍⚕️</div>
+            <div class="chat-info">
+              <div class="chat-name">Dr. Sarah Martinez</div>
+              <div class="chat-status">Online · Responds within 4 hours</div>
+            </div>
+          </div>
+          <div class="chat-messages">
+            <div class="chat-date-divider">5 days ago</div>
+            <div class="msg received" style="animation-delay:0.1s">
+              <div class="msg-bubble">Hi Jordan, your prescription for Montelukast has been filled and sent to CVS Pharmacy. You should be able to pick it up today! 💊</div>
+              <div class="msg-time">Dr. Martinez · 2:14 PM</div>
+            </div>
+            <div class="msg sent" style="animation-delay:0.2s">
+              <div class="msg-bubble">Thank you so much!</div>
+              <div class="msg-time">2:31 PM</div>
+            </div>
+            <div class="chat-date-divider">Today</div>
+            <div class="msg received" style="animation-delay:0.3s">
+              <div class="msg-bubble">Hey Jordan! Just checking in — it's been a few days since you started Montelukast. How are you feeling? Any changes in your symptoms? 🌿</div>
+              <div class="msg-time">Dr. Martinez · 9:41 AM</div>
+            </div>
+            <div style="animation-delay:0.5s; animation: fadeUp 0.3s ease 0.5s both;">
+              <div class="suggested-label">Suggested replies</div>
+              <div class="msg-suggested" onclick="selectSuggested(this, 'Feeling much better, symptoms have improved!')">💚 Feeling much better, symptoms have improved!</div>
+              <div class="msg-suggested" onclick="selectSuggested(this, 'About the same, not much change yet')">😐 About the same, not much change yet</div>
+              <div class="msg-suggested" onclick="selectSuggested(this, 'I have some questions about my medication')">❓ I have some questions about my medication</div>
+            </div>
+          </div>
+          <div class="chat-input-area">
+            <input class="chat-input" id="chatInput" placeholder="Message Dr. Martinez..." />
+            <button class="chat-send" onclick="sendMessage()">↑</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.nav-tab').forEach((t, i) => {
+    const tabs = ['trigger','push','email','chat'];
+    t.classList.toggle('active', tabs[i] === tab);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => {
+    c.classList.toggle('active', c.id === 'tab-' + tab);
+  });
+}
+
+function selectSuggested(el, text) {
+  const input = document.getElementById('chatInput');
+  input.value = text;
+  input.focus();
+}
+
+function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  const messages = document.querySelector('.chat-messages');
+  const msg = document.createElement('div');
+  msg.className = 'msg sent';
+  msg.innerHTML = `<div class="msg-bubble">${text}</div><div class="msg-time">Just now</div>`;
+  messages.appendChild(msg);
+  input.value = '';
+  messages.scrollTop = messages.scrollHeight;
+  setTimeout(() => {
+    const reply = document.createElement('div');
+    reply.className = 'msg received';
+    reply.innerHTML = `<div class="msg-bubble">Thanks for the update, Jordan! I'll make a note of that. If anything changes or you have more questions, don't hesitate to reach out. 😊</div><div class="msg-time">Dr. Martinez · Just now</div>`;
+    messages.appendChild(reply);
+    messages.scrollTop = messages.scrollHeight;
+  }, 1500);
+}
+</script>
+</body>
+</html>
